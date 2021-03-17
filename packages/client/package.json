@@ -1,0 +1,24 @@
+{
+  "name": "@degry/github-release-app--client",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/degry/github-release-app.git"
+  },
+  "author": "ReasonX7",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/degry/github-release-app/issues"
+  },
+  "homepage": "https://github.com/degry/github-release-app#readme",
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "swr": "^0.5.2",
+    "parcel": "^1.12.4"
+  }
+}

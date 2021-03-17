@@ -1,0 +1,26 @@
+{
+  "name": "@degry/github-release-app",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/degry/github-release-app.git"
+  },
+  "author": "ReasonX7",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/degry/github-release-app/issues"
+  },
+  "homepage": "https://github.com/degry/github-release-app#readme",
+  "devDependencies": {
+    "eslint": "^7.21.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-react": "^7.22.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
