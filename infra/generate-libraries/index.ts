@@ -11,16 +11,18 @@ const analyzeDist = (fullPath, extensions) => {
     .filter(file => micromatch.isMatch(file, extensions))
     .flatMap(file => {
       const content = fs.readFileSync(path.join(fullPath, file)).toString()
-      const matches = Array.from(content.matchAll(/import\s.*from\s['"]([@\w/-]+)['"]/g))
-      return matches.map(m => m[1]).filter(Boolean)
+      const matches = Array.from(
+        content.matchAll(/import\s.*from\s['"]([@\w/-]+)['"]|require\(['"]([@\w/-]+)['"]\)/g)
+      )
+      return matches.map(m => m[1] || m[2]).filter(Boolean)
     })
 }
 
-const generateLibraries = async (pckg: Package, options: { version: string }) => {
+const generateLibraries = async (pckg: Package) => {
   for (const [name, lib] of Object.entries(pckg.libraries)) {
-    const sourcePath = path.join(lib.root, lib.source)
+    const distPath = path.join(lib.root, lib.dist)
 
-    const deps = analyzeDist(sourcePath, ['*.js']).reduce((result, dep) => {
+    const deps = analyzeDist(distPath, ['*.js']).reduce((result, dep) => {
       if (pckg.dependencies[dep]) {
         _.set(result, `dependencies.${dep}`, pckg.dependencies[dep])
       }
@@ -31,15 +33,17 @@ const generateLibraries = async (pckg: Package, options: { version: string }) =>
         _.set(result, `devDependencies.${dep}`, pckg.devDependencies[dep])
       }
       if (pckg.libraries[dep]) {
-        _.set(result, `dependencies.${dep}`, options.version)
+        _.set(result, `dependencies.${dep}`, pckg.version)
       }
       return result
     }, {})
 
     const libPackage: Package = {
       name,
-      version: options.version,
+      version: pckg.version,
       main: lib.dist,
+      types: lib.dist,
+      files: [lib.dist],
       ...deps
     }
 

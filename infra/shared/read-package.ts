@@ -10,6 +10,9 @@ const packageJsonFile = path.join(cwd, 'package.json')
 const readPackage = (file = packageJsonFile): Package => {
   const pckg = fs.readJsonSync(file)
   return _.merge({
+    dependencies: {},
+    devDependencies: {},
+    peerDependencies: {},
     libraries: {}
   }, pckg)
 }

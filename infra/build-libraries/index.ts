@@ -1,29 +1,43 @@
 const rollup = require('rollup')
-const typescript = require('@rollup/plugin-typescript')
+import ts from "@wessberg/rollup-plugin-ts";
 const path = require('path')
 
-import { Libraries } from '../shared/types'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
 
-const createConfig = ({ root, source, dist }) => ({
-  input: path.join(root, source, 'index.ts'),
-  output: {
-    dir: path.join(root, dist),
-    format: 'cjs'
-  },
-  plugins: [
-    typescript()
-  ]
-})
+import { Package } from '../shared/types'
 
-const runConfig = async ({ input, output, plugins }) => {
-  const bundle = await rollup.rollup({ input, plugins })
+import generateTSConfig from '../generate-tsconfig'
+
+const createConfig = (name: string, pckg: Package) => {
+  const { root, source, dist } = pckg.libraries[name]
+  return {
+    input: path.join(root, source, 'index.ts'),
+    external: [
+      ...Object.keys(pckg.dependencies),
+      ...Object.keys(pckg.peerDependencies),
+      ...Object.keys(pckg.libraries)
+    ],
+    output: {
+      dir: path.join(root, dist),
+      format: 'cjs'
+    },
+    plugins: [
+      // @ts-ignore
+      ts(generateTSConfig(pckg.libraries).compilerOptions),
+      nodeResolve()
+    ]
+  }
+}
+
+const runConfig = async ({ input, external, output, plugins }) => {
+  const bundle = await rollup.rollup({ input, external, plugins })
   await bundle.write({ output })
   await bundle.close()
 }
 
-const buildLibraries = async (libraries: Libraries) => {
-  for (const lib of Object.values(libraries)) {
-    await runConfig(createConfig(lib))
+const buildLibraries = async (pckg: Package) => {
+  for (const name of Object.keys(pckg.libraries)) {
+    await runConfig(createConfig(name, pckg))
   }
 }
 

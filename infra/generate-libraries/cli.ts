@@ -3,7 +3,5 @@ import generateLibraries from './index';
 
 const pckg = readPackage()
 
-const version: string = process.argv.slice(2).shift()
-
-generateLibraries(pckg, { version })
+generateLibraries(pckg)
   .then(() => console.log('"package.json" was generated.'))
