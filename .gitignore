@@ -1,2 +1,8 @@
 .idea
 node_modules
+.env
+config.json
+dist
+packages/**/package.json
+tsconfig.json
+!infra/tsconfig.json

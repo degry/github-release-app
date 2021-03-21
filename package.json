@@ -1,9 +1,13 @@
 {
-  "name": "@degry/github-release-app",
+  "name": "@degry/release-manager",
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "libs:build": "ts-node -P infra/tsconfig.json infra/build-libraries/cli.ts",
+    "libs:clear": "ts-node -P infra/tsconfig.json infra/clear-libraries/cli.ts",
+    "libs:generate": "ts-node -P infra/tsconfig.json infra/generate-libraries/cli.ts",
+    "ts:generate": "ts-node -P infra/tsconfig.json infra/generate-tsconfig/cli.ts",
+    "postinstall": "npm run ts:generate"
   },
   "repository": {
     "type": "git",
@@ -15,12 +19,40 @@
     "url": "https://github.com/degry/github-release-app/issues"
   },
   "homepage": "https://github.com/degry/github-release-app#readme",
-  "devDependencies": {
+  "dependencies": {
+    "@octokit/rest": "^18.3.5",
+    "@rollup/plugin-typescript": "^8.2.0",
+    "@types/fs-extra": "^9.0.8",
+    "@types/lodash": "^4.14.168",
+    "@types/micromatch": "^4.0.1",
+    "@types/node": "^14.14.35",
+    "@types/rimraf": "^3.0.0",
+    "dotenv": "^8.2.0",
     "eslint": "^7.21.0",
     "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-react": "^7.22.0"
+    "fs-extra": "^9.1.0",
+    "ink": "^3.0.8",
+    "lodash": "^4.17.21",
+    "micromatch": "^4.0.2",
+    "nodegit": "^0.27.0",
+    "react": "^16.14.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.42.0",
+    "ts-node": "^9.1.1",
+    "yargs": "^16.2.0"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "libraries": {
+    "@degry/release-manager-api": {
+      "root": "packages/api",
+      "dist": "dist",
+      "source": "src",
+      "private": false
+    },
+    "@degry/release-manager-cli": {
+      "root": "packages/cli",
+      "dist": "dist",
+      "source": "src",
+      "private": false
+    }
+  }
 }
